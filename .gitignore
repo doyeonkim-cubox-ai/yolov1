@@ -1,0 +1,10 @@
+.idea
+.gitmessage.txt
+pascalvoc/**
+**/__pycache__
+model
+**/wandb
+lightning_logs
+logs/
+IMG**
+pr.py
