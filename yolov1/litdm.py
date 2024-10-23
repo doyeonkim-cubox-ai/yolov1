@@ -36,10 +36,6 @@ class PascalVOC(L.LightningDataModule):
             self.train = ConcatDataset([self.voc2007_test, self.voc2007_trainval, self.voc2012_train])
             self.valid = self.voc2012_val
 
-        # if stage == "test":
-        #     self.test = torchvision.datasets.VOCDetection(self.data_dir, year='2012' image_set="val",
-        #                                                   transform=self.transform_test)
-
     def train_dataloader(self):
         return DataLoader(self.train, batch_size=self.batch_size, shuffle=True, num_workers=8)
 
