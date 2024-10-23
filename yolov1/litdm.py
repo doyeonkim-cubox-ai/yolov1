@@ -45,34 +45,3 @@ class PascalVOC(L.LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(self.valid, batch_size=self.batch_size, shuffle=False, num_workers=8)
-
-    # def test_dataloader(self):
-    #     return DataLoader(self.test, batch_size=self.batch_size, shuffle=False, num_workers=8)
-
-# print("File __name__ is set to: {}" .format(__name__))
-#
-#
-# def main():
-#     transform = transforms.Compose([
-#         transforms.Resize((448, 448)),
-#         transforms.ToTensor()
-#     ])
-#     # voc2007_trainval = torchvision.datasets.VOCDetection("./pascalvoc", download=True, year='2007', image_set="trainval")
-#     voc2007_train = MyData("./pascalvoc", download=True, year='2007', image_set="train", transform=transform)
-#     # voc2007_test = torchvision.datasets.VOCDetection("./pascalvoc", download=True, year='2007', image_set="test")
-#     # voc2012_val = torchvision.datasets.VOCDetection("./pascalvoc", download=True, year='2012', image_set="val")
-#     # voc2012_train = torchvision.datasets.VOCDetection("./pascalvoc", download=True, year='2012', image_set="train")
-#
-#     train_loader = DataLoader(voc2007_train, batch_size=64, shuffle=False, num_workers=8)
-#     # trainval_loader = DataLoader(voc2007_trainval, batch_size=64, shuffle=False, num_workers=8)
-#
-#     for x, y in train_loader:
-#         print(x.shape)
-#         print(y.shape)
-#         img = transforms.ToPILImage()(x)
-#         break
-#
-#
-# if __name__ == '__main__':
-#     print("main function executed")
-#     main()

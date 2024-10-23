@@ -21,6 +21,7 @@ class YOLO(nn.Module):
         self.bn4 = nn.BatchNorm2d(1024)
         self.leaky_relu = nn.LeakyReLU(0.1)
         self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(p=0.5)
         self.fc1 = nn.Linear(7*7*1024, 4096)
         self.fc2 = nn.Linear(4096, 1470)
 
@@ -32,7 +33,6 @@ class YOLO(nn.Module):
         out = self.conv1(out)
         out = self.bn1(out)
         out = self.leaky_relu(out)
-
         out = self.conv2(out)
         out = self.bn2(out)
         out = self.leaky_relu(out)
@@ -44,6 +44,7 @@ class YOLO(nn.Module):
         out = self.relu(out)
         out = out.view(out.size(0), -1)
         out = self.fc1(out)
+        out = self.dropout(out)
         out = self.fc2(out)
         out = out.view(-1, 7, 7, 30)
 

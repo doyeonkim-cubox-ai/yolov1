@@ -32,22 +32,15 @@ class MyData(VOCDetection):
             bbox_height = (y_max - y_min) / 448
             cell_x = int(((x_min + x_max) / 2) / 64)
             cell_y = int(((x_min + x_max) / 2) / 64)
-            label[cell_x][cell_y][10 + class_idx] = 1
             if label[cell_x][cell_y][4] == 0.0:
                 label[cell_x][cell_y][0] = bbox_x
                 label[cell_x][cell_y][1] = bbox_y
                 label[cell_x][cell_y][2] = bbox_width
                 label[cell_x][cell_y][3] = bbox_height
                 label[cell_x][cell_y][4] = 1
-            else:
-                label[cell_x][cell_y][5] = bbox_x
-                label[cell_x][cell_y][6] = bbox_y
-                label[cell_x][cell_y][7] = bbox_width
-                label[cell_x][cell_y][8] = bbox_height
-                label[cell_x][cell_y][9] = 1
+                label[cell_x][cell_y][10 + class_idx] = 1
+
         if self.transform is not None:
             img = self.transform(img)
 
         return img, label
-
-

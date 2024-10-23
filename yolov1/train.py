@@ -39,7 +39,7 @@ def main():
     trainer = L.Trainer(
         max_epochs=135,
         accelerator='cuda', logger=wandb_logger,
-        callbacks=[lr_monitor, cp_callback], devices=2, deterministic=True)
+        callbacks=[lr_monitor, cp_callback], devices=1)
     trainer.fit(net, dm)
 
 
