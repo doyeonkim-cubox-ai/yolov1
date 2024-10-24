@@ -5,7 +5,6 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset, Dataset
 from torchvision.datasets import VOCDetection
 from PIL import Image
 from xml.etree.ElementTree import parse as ET_parse
-import lightning as L
 
 classes = ["aeroplane", "bicycle", "bird", "boat", "bottle",
                    "bus", "car", "cat", "chair", "cow", "diningtable",
@@ -17,7 +16,7 @@ class MyData(VOCDetection):
     def __getitem__(self, index):
         img = Image.open(self.images[index]).convert('RGB')
         target = self.parse_voc_xml(ET_parse(self.annotations[index]).getroot())
-        label = torch.zeros(7, 7, 30)
+        label = torch.zeros([7, 7, 30], dtype=torch.float64)
         img_width = float(target['annotation']['size']['width'])
         img_height = float(target['annotation']['size']['height'])
         for obj in target['annotation']['object']:
