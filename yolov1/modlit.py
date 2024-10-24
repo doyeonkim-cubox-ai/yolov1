@@ -47,7 +47,7 @@ class VGG16YOLO(L.LightningModule):
         loss = self.loss_fn(hypothesis, y_tr)
         # mAP
         mAP = mean_average_precision(hypothesis, y_tr, 0.5)
-
+        torch.autograd.set_detect_anomaly(True)
         self.log("training loss", loss, sync_dist=True)
         self.log("train mAP", mAP, sync_dist=True)
 
