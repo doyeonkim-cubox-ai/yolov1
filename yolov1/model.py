@@ -28,6 +28,10 @@ class YOLO(nn.Module):
         for params in self.backbone.parameters():
             params.requires_grad = False
 
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, mean=0, std=0.01)
+
     def forward(self, x):
         out = self.backbone(x)
         out = self.conv1(out)
@@ -41,9 +45,10 @@ class YOLO(nn.Module):
         out = self.leaky_relu(out)
         out = self.conv4(out)
         out = self.bn4(out)
-        out = self.relu(out)
+        out = self.leaky_relu(out)
         out = out.view(out.size(0), -1)
         out = self.fc1(out)
+        out = self.relu(out)
         out = self.dropout(out)
         out = self.fc2(out)
         out = out.view(-1, 7, 7, 30)
