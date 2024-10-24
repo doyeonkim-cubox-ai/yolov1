@@ -22,7 +22,7 @@ class YOLOLoss(nn.Module):
 
         # bbox loss
         bbox_pred = Iobj_i * ((1 - best_box) * target[..., 0:4] + best_box * target[..., 5:9])
-        bbox_pred[..., 2:4] = torch.sqrt(bbox_pred[..., 2:4])
+        bbox_pred[..., 2:4] = torch.sign(bbox_pred[..., 2:4])*torch.sqrt(torch.abs(bbox_pred[..., 2:4]) + 1e-6)
         bbox_target = Iobj_i * (target[..., 0:4])
         bbox_target[..., 2:4] = torch.sqrt(bbox_target[..., 2:4])
 
