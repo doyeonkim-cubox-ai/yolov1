@@ -28,9 +28,10 @@ class YOLO(nn.Module):
         for params in self.backbone.parameters():
             params.requires_grad = False
 
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
-                nn.init.normal_(m.weight, mean=0, std=0.01)
+        for name, layer in self.named_modules():
+            if name.find('conv') != -1 or name.find('fc') != -1:
+                nn.init.normal_(layer.weight, mean=0, std=0.01)
+                nn.init.normal_(layer.bias, mean=0, std=0.01)
 
     def forward(self, x):
         out = self.backbone(x)
@@ -55,3 +56,5 @@ class YOLO(nn.Module):
 
         return out
 
+
+model = YOLO()
