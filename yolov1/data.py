@@ -1,3 +1,5 @@
+import logging
+import sys
 import torch
 import torchvision
 from torchvision import transforms
@@ -5,6 +7,7 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset, Dataset
 from torchvision.datasets import VOCDetection
 from PIL import Image
 from xml.etree.ElementTree import parse as ET_parse
+from xml.etree.ElementTree import ParseError
 
 classes = ["aeroplane", "bicycle", "bird", "boat", "bottle",
                    "bus", "car", "cat", "chair", "cow", "diningtable",
@@ -15,7 +18,12 @@ classes = ["aeroplane", "bicycle", "bird", "boat", "bottle",
 class MyData(VOCDetection):
     def __getitem__(self, index):
         img = Image.open(self.images[index]).convert('RGB')
-        target = self.parse_voc_xml(ET_parse(self.annotations[index]).getroot())
+        # target = self.parse_voc_xml(ET_parse(self.annotations[index]).getroot())
+        try:
+            target = self.parse_voc_xml(ET_parse(self.annotations[index]).getroot())
+        except ParseError as e:
+            print(f"Error parsing {self.annotations[index]}: {e}")
+            return # Or handle it in another way, e.g., return a default target
         label = torch.zeros([7, 7, 30], dtype=torch.float64)
         img_width = float(target['annotation']['size']['width'])
         img_height = float(target['annotation']['size']['height'])
@@ -30,7 +38,7 @@ class MyData(VOCDetection):
             bbox_width = (x_max - x_min) / 448
             bbox_height = (y_max - y_min) / 448
             cell_x = int(((x_min + x_max) / 2) / 64)
-            cell_y = int(((x_min + x_max) / 2) / 64)
+            cell_y = int(((y_min + y_max) / 2) / 64)
             if label[cell_x][cell_y][4] == 0.0:
                 label[cell_x][cell_y][0] = bbox_x
                 label[cell_x][cell_y][1] = bbox_y
@@ -43,3 +51,29 @@ class MyData(VOCDetection):
             img = self.transform(img)
 
         return img, label
+
+
+# def main():
+#     mylogger = logging.getLogger('debugger')
+#     mylogger.setLevel(logging.WARNING)
+#     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messages)s")
+#     stream_handler = logging.StreamHandler(stream=sys.stdout)
+#     stream_handler.setFormatter(formatter)
+#     mylogger.addHandler(stream_handler)
+#
+#
+#     transform = transforms.Compose([
+#                 transforms.RandomResizedCrop((448, 448), scale=(0.8, 1.0)),
+#                 transforms.RandomAffine(degrees=0, translate=(0.2, 0.2)),
+#                 transforms.ColorJitter(saturation=0.15, hue=0.15),
+#                 transforms.ToTensor(),
+#                 transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+#         ])
+#     dt1 = MyData(root="./pascalvoc", year='2007', image_set='trainval', download=True, transform=transform)
+#     dt2 = MyData(root="./pascalvoc", year='2007', image_set='test', download=True, transform=transform)
+#     dt3 = MyData(root="./pascalvoc", year='2012', image_set='train', download=True, transform=transform)
+#     dt4 = MyData(root="./pascalvoc", year='2007', image_set='val', download=True, transform=transform)
+#
+#
+# if __name__ == '__main__':
+#     main()
