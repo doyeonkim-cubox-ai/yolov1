@@ -28,7 +28,7 @@ class VGG16YOLO(L.LightningModule):
         def lr_fn(epoch):
             warm_up_epochs = 1
             if epoch <= warm_up_epochs:
-                return float(epoch + 1/9) / float(warm_up_epochs - 8/9)
+                return 1
             elif epoch < 75:
                 return 10
             elif epoch < 105:
@@ -47,7 +47,7 @@ class VGG16YOLO(L.LightningModule):
         loss = self.loss_fn(hypothesis, y_tr)
         # mAP
         mAP = mean_average_precision(hypothesis, y_tr, 0.5)
-        torch.autograd.set_detect_anomaly(True)
+        # torch.autograd.set_detect_anomaly(True)
         self.log("training loss", loss, sync_dist=True)
         self.log("train mAP", mAP, sync_dist=True)
 

@@ -47,5 +47,6 @@ class YOLOLoss(nn.Module):
 
         # total loss
         loss = self.coord * bbox_loss + self.noobj * noobj_loss + obj_loss + class_loss
+        loss /= len(pred)
 
         return loss
