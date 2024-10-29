@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset, Dataset
 import lightning as L
 from PIL import Image
 from yolov1.data import MyData
+import logging
 
 
 class PascalVOC(L.LightningDataModule):
@@ -14,6 +15,7 @@ class PascalVOC(L.LightningDataModule):
         self.batch_size = batch_size
         self.transform = transforms.Compose([
             transforms.Resize((448, 448)),
+            transforms.ColorJitter(saturation=0.15, hue=0.15, brightness=0.15),
             transforms.ToTensor(),
             transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
         ])
