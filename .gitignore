@@ -6,6 +6,6 @@ model
 **/wandb
 lightning_logs
 logs/
-IMG**
 pr.py
 debug.ipynb
+*.png
