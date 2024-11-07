@@ -20,22 +20,23 @@ def main():
     # data module
     dm = PascalVOC(data_dir="./pascalvoc", batch_size=64)
 
+    # model
     net = VGG16YOLO()
-    # summary(net, (3, 448, 448))
-    # exit()
-    now = time.strftime('%X')
-    # print(net)
-    # exit(0)
 
+    now = time.strftime('%X')
     wandb_logger = WandbLogger(log_model=False, name=f'{now}', project='yolov1')
+
+    # callbacks
     lr_monitor = LearningRateMonitor(logging_interval='step')
     cp_callback = ModelCheckpoint(
         save_top_k=1,
         monitor="validation loss",
         mode="min",
         dirpath="./model/",
-        filename=f"{now}"
+        filename="yolov1"
     )
+
+    # train
     trainer = L.Trainer(
         max_epochs=135,
         accelerator='cuda', logger=wandb_logger,

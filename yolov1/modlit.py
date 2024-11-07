@@ -26,9 +26,8 @@ class VGG16YOLO(L.LightningModule):
 
     def configure_optimizers(self):
         def lr_fn(epoch):
-            warm_up_epochs = 1
-            if epoch <= warm_up_epochs:
-                return 1
+            if epoch < 5:
+                return 1 + 9 * (float(epoch)/5.0)
             elif epoch < 75:
                 return 10
             elif epoch < 105:
@@ -48,8 +47,8 @@ class VGG16YOLO(L.LightningModule):
         # mAP
         mAP = mean_average_precision(hypothesis, y_tr, 0.5)
         # torch.autograd.set_detect_anomaly(True)
-        self.log("training loss", loss, sync_dist=True)
-        self.log("train mAP", mAP, sync_dist=True)
+        self.log("training loss", loss)
+        self.log("train mAP", mAP)
 
         return loss
 
@@ -61,5 +60,5 @@ class VGG16YOLO(L.LightningModule):
         # mAP
         mAP = mean_average_precision(hypothesis, y_val, 0.5)
 
-        self.log("validation loss", loss, sync_dist=True)
-        self.log("valid mAP", mAP, sync_dist=True)
+        self.log("validation loss", loss)
+        self.log("valid mAP", mAP)
